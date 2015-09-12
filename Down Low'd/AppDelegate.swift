@@ -9,6 +9,7 @@
 import UIKit
 import WatchConnectivity
 import CoreLocation
+import Contacts
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -99,18 +100,37 @@ extension AppDelegate: CLLocationManagerDelegate {
 
 extension AppDelegate: CommunicatorDelegate {
 	func communicatorGetDataForSharing(_: Communicator) -> (type: String, data: AnyObject) {
-		
+		// TODO: put this on another thread
+		let store = CNContactStore()
+		let predicate = CNContact.predicateForContactsMatchingName("Justin Loew")
+		if let contactOpt = try? store.unifiedContactsMatchingPredicate(predicate, keysToFetch: [CNContactEmailAddressesKey, CNContactFamilyNameKey, CNContactGivenNameKey, CNContactImageDataAvailableKey, CNContactImageDataKey, CNContactJobTitleKey, CNContactMiddleNameKey, CNContactNamePrefixKey, CNContactNameSuffixKey, CNContactNicknameKey, CNContactOrganizationNameKey, CNContactPhoneNumbersKey, CNContactPostalAddressesKey, CNContactSocialProfilesKey, CNContactThumbnailImageDataKey, CNContactTypeKey, CNContactUrlAddressesKey]).first,
+			contact = contactOpt,
+			vcardData = try? CNContactVCardSerialization.dataWithContacts([contact])
+		{
+			return ("vcf", vcardData)
+		} else {
+			print("Error getting contact card for user")
+			return ("vcf", NSData())
+		}
 	}
 	
 	func communicator(comm: Communicator, didReceiveSharedData data: AnyObject, ofType type: String) {
 		if type == "vcf" {
-			guard let data = data as? NSData else {
+			guard let data = data as? NSData,
+				_contacts = try? CNContactVCardSerialization.contactsWithData(data) as? [CNContact],
+				contacts = _contacts
+			else {
 				print("Unable to read VCF data")
 				return
 			}
 			
-			// process VCF data
-			
+			// save VCF data
+			let store = CNContactStore()
+			let saveRequest = CNSaveRequest()
+			contacts.forEach { (contact) -> () in
+				saveRequest.addContact(contact.mutableCopy() as! CNMutableContact, toContainerWithIdentifier: nil)
+			}
+			_ = try? store.executeSaveRequest(saveRequest)
 		} else if type == "LinkedIn" {
 			guard let username = data as? String else {
 				print("Unable to read username")
@@ -118,7 +138,10 @@ extension AppDelegate: CommunicatorDelegate {
 			}
 			
 			// friend him on LinkedIn
-			
+			let profileURL = NSURL(string: "https://linkedin.com/in/" + username)!
+			UIApplication.sharedApplication().openURL(profileURL)
+		} else {
+			print("Unknown type")
 		}
 	}
 }
