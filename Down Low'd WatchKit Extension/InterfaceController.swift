@@ -51,7 +51,7 @@ class InterfaceController: WKInterfaceController {
 		}
 		
 		let message = [
-			"acceleration": mag,
+			"magnitude": mag,
 			"timestamp": NSDate()
 			// the iOS app will add the location info
 		]

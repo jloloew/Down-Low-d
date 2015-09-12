@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 	private var wcsess: WCSession!
 	let locManager = CLLocationManager()
+	var communicator: Communicator?
 	
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		guard WCSession.isSupported() else {
@@ -63,12 +64,17 @@ extension AppDelegate: WCSessionDelegate {
 	func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
 		print("received message from watch: \(message)")
 		
+		// ignore the message if we're already talking to the server
+		guard communicator == nil else {
+			print("ignoring message because we're already talking to the server")
+			return
+		}
+		
 		// add location info
 		guard let loc = locManager.location else {
 			print("Can't get location")
 			return
 		}
-		
 		var msgDict = message
 		msgDict["location"] = [
 			"lat": loc.coordinate.latitude,
@@ -76,7 +82,10 @@ extension AppDelegate: WCSessionDelegate {
 		]
 		
 		// send to server
-		
+		communicator = Communicator()
+		let com = communicator!
+		com.delegate = self
+		com.sendDict(msgDict)
 	}
 }
 
@@ -85,5 +94,15 @@ extension AppDelegate: CLLocationManagerDelegate {
 		if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
 			locManager.startUpdatingLocation()
 		}
+	}
+}
+
+extension AppDelegate: CommunicatorDelegate {
+	func communicatorGetDataForSharing(_: Communicator) -> (type: String, data: AnyObject) {
+		
+	}
+	
+	func communicator(comm: Communicator, didReceiveSharedData data: NSData) {
+		
 	}
 }
