@@ -9,51 +9,62 @@
 import WatchKit
 import CoreMotion
 
+protocol AccelDataListenerDelegate: AnyObject {
+	func accelDataListener(listener: AccelDataListener, didFindSpikeOfMagnitude magnitude: Double)
+}
+
 class AccelDataListener: NSObject {
 	
-	let threshold = 0.2
-	let callbackPauseTime: NSTimeInterval = 1.0
+	let accelReadDelay: NSTimeInterval = 0.05 // amount of time to wait between each read from accel data
+	let threshold = 0.3
 	let manager = CMMotionManager()
-	private var handler: CMAccelerometerHandler!
-	
-	init(spikeDetectedHandler: (magnitude: Double) -> Void) {
-		super.init()
-		manager.accelerometerUpdateInterval = 0.01
-		handler = { (data, error) -> Void in
-			guard let data = data?.acceleration else {
-				print(error)
-				return
-			}
-			
-			let magnitude = data.x*data.x + data.y*data.y + data.z*data.z
-			let userAccel = abs(magnitude - 1.0)
-			// filter magnitude
-			if userAccel >= self.threshold {
-				print("Spike detected (\(userAccel)g)")
-				spikeDetectedHandler(magnitude: userAccel)
-				// pause callbacks
-				print("pausing accel triggers for \(self.callbackPauseTime) seconds")
-				self.manager.stopAccelerometerUpdates()
-				dispatch_after(dispatch_time_t(self.callbackPauseTime * Double(NSEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
-					print("resuming accel triggers")
-					self.manager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue(), withHandler: self.handler)
-				}
-			}
-		}
-		print("starting accel triggers")
-		manager.startAccelerometerUpdatesToQueue(NSOperationQueue.mainQueue(), withHandler: handler)
-	}
+	weak var delegate: AccelDataListenerDelegate!
+	private var paused = false
+	private var isSpiking = false // whether the last reading was a spike
 	
 	deinit {
 		manager.stopAccelerometerUpdates()
 	}
 	
-//	func start() {
-//		manager.startAccelerometerUpdates()
-//	}
-//	
-//	func stop() {
-//		manager.stopAccelerometerUpdates()
-//	}
+	func start() {
+		guard paused else { // don't allow more than one chain of updates to start
+			return
+		}
+		
+		manager.startAccelerometerUpdates()
+		paused = false
+		print("Starting accel updates")
+		handleNewAccelData(manager.accelerometerData!)
+	}
+	
+	func stop() {
+		paused = true
+		manager.stopAccelerometerUpdates()
+		print("Stopping accel updates")
+	}
+	
+	private func handleNewAccelData(data: CMAccelerometerData) {
+		// get magnitude
+		let data = data.acceleration
+		let magnitude = (data.x*data.x) + (data.y*data.y) + (data.z*data.z)
+		let userAccel = abs(magnitude - 1.0)
+		print(userAccel)
+		
+		// filter magnitude
+		if userAccel >= self.threshold && !isSpiking { // only process new spikes
+			print("Spike detected (\(userAccel)g)")
+			self.delegate.accelDataListener(self, didFindSpikeOfMagnitude: userAccel)
+			isSpiking = true
+		} else {
+			isSpiking = false
+		}
+		
+		// schedule recursion if we're not paused
+		if !paused {
+			dispatch_after(dispatch_time_t(self.accelReadDelay * Double(NSEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
+				self.handleNewAccelData(self.manager.accelerometerData!)
+			}
+		}
+	}
 	
 }

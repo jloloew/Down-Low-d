@@ -8,8 +8,8 @@
 
 import WatchKit
 
-private let _server = "localhost"
-private let _port = 8888
+private let _server = "104.236.59.44"
+private let _port = 8080
 
 protocol CommunicatorDelegate: AnyObject {
 	func communicatorGetDataForSharing(comm: Communicator) -> (type: String, data: AnyObject)

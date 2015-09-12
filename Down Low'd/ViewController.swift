@@ -7,19 +7,33 @@
 //
 
 import UIKit
+import WatchConnectivity
 
 class ViewController: UIViewController {
-
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
 	}
-
+	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
 	}
-
-
+	
+	@IBAction func sendFakeAccel() {
+		print("Sending fake accel data")
+		let message = [
+			"magnitude": 0.2,
+			"timestamp": NSDate(),
+			"location": [
+				"lat": 42.275555556,
+				"lon": -83.731388889
+			]
+		]
+		
+		let ad = (UIApplication.sharedApplication().delegate as! AppDelegate)
+		ad.session(WCSession.defaultSession(), didReceiveMessage: message)
+	}
 }
 

@@ -18,7 +18,7 @@ class InterfaceController: WKInterfaceController {
 			accelCountLabel?.setText("\(accelCount)")
 		}
 	}
-	var accelDataListener: AccelDataListener!
+	var accelDataListener = AccelDataListener()
 	private var wcsess: WCSession!
 	
 	override func willActivate() {
@@ -32,15 +32,12 @@ class InterfaceController: WKInterfaceController {
 		wcsess.delegate = self
 		wcsess.activateSession()
 		// start accelerometer data listener
-		accelDataListener = AccelDataListener(spikeDetectedHandler: { (magnitude) -> Void in
-			self.accelCount++
-			self.sendAccelerationOfMagnitude(magnitude)
-		})
+		accelDataListener.delegate = self
+		accelDataListener.start()
 	}
 	
 	override func didDeactivate() {
 		// This method is called when watch view controller is no longer visible
-		accelDataListener = nil
 		super.didDeactivate()
 	}
 	
@@ -65,5 +62,12 @@ class InterfaceController: WKInterfaceController {
 extension InterfaceController: WCSessionDelegate {
 	func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
 		print("Received message from phone: \(message)")
+	}
+}
+
+extension InterfaceController: AccelDataListenerDelegate {
+	func accelDataListener(_: AccelDataListener, didFindSpikeOfMagnitude magnitude: Double) {
+		accelCount++
+		sendAccelerationOfMagnitude(magnitude)
 	}
 }
