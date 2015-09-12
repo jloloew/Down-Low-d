@@ -22,7 +22,7 @@ class Communicator: NSObject {
 	var server: String { return _server }
 	var port: Int { return _port }
 	var host: String { return "\(server):\(port)" }
-	let socket = SocketIOClient(socketURL: "\(_server):\(_port)")
+	let socket = SocketIOClient(socketURL: "\(_server):\(_port)", opts: ["forceWebsockets": true])
 	weak var delegate: CommunicatorDelegate!
 	private var didSendData = false
 	private var didReceiveData = false
@@ -52,6 +52,7 @@ class Communicator: NSObject {
 		}
 		
 		socket.on("sharedData") { (data, _) -> Void in
+			print("sharedData")
 			// close socket if necessary
 			self.didReceiveData = true
 			self.waitAndCloseSocket()
@@ -65,6 +66,14 @@ class Communicator: NSObject {
 				print("Unable to read sharedData")
 			}
 		}
+		
+		socket.onAny { (anyEvent) -> Void in
+			print("Received any: " + anyEvent.event)
+		}
+		
+		socket.on("error") { (data, _) -> Void in
+			print("Error: \(data ?? nil)")
+		}
 	}
 	
 	func waitAndCloseSocket() {
@@ -75,6 +84,7 @@ class Communicator: NSObject {
 	}
 	
 	func sendDict(dict: [String : AnyObject]) {
+		print("Sending dict: \(dict)")
 		socket.emit("accelerationDetected", withItems: [dict])
 	}
 }

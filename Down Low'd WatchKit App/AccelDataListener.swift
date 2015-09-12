@@ -13,13 +13,13 @@ protocol AccelDataListenerDelegate: AnyObject {
 	func accelDataListener(listener: AccelDataListener, didFindSpikeOfMagnitude magnitude: Double)
 }
 
-class AccelDataListener: NSObject {
+class AccelDataListener: AnyObject {
 	
 	let accelReadDelay: NSTimeInterval = 0.05 // amount of time to wait between each read from accel data
 	let threshold = 0.3
 	let manager = CMMotionManager()
 	weak var delegate: AccelDataListenerDelegate!
-	private var paused = false
+	private var paused = true
 	private var isSpiking = false // whether the last reading was a spike
 	
 	deinit {
@@ -33,7 +33,8 @@ class AccelDataListener: NSObject {
 		
 		manager.startAccelerometerUpdates()
 		paused = false
-		print("Starting accel updates")
+		usleep(100000)
+		print("Starting accel updates \(manager.accelerometerData)")
 		handleNewAccelData(manager.accelerometerData!)
 	}
 	
@@ -48,7 +49,7 @@ class AccelDataListener: NSObject {
 		let data = data.acceleration
 		let magnitude = (data.x*data.x) + (data.y*data.y) + (data.z*data.z)
 		let userAccel = abs(magnitude - 1.0)
-		print(userAccel)
+//		print(userAccel)
 		
 		// filter magnitude
 		if userAccel >= self.threshold && !isSpiking { // only process new spikes

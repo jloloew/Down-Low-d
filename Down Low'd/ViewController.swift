@@ -23,13 +23,13 @@ class ViewController: UIViewController {
 	
 	@IBAction func sendFakeAccel() {
 		print("Sending fake accel data")
-		let message = [
+		let message: [String : AnyObject] = [
 			"magnitude": 0.2,
-			"timestamp": NSDate(),
-			"location": [
-				"lat": 42.275555556,
-				"lon": -83.731388889
-			]
+			"timestamp": Int(NSDate.timeIntervalSinceReferenceDate())
+//			"location": [
+//				"lat": 42.275555556,
+//				"lon": -83.731388889
+//			]
 		]
 		
 		let ad = (UIApplication.sharedApplication().delegate as! AppDelegate)

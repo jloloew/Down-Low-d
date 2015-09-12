@@ -66,10 +66,10 @@ extension AppDelegate: WCSessionDelegate {
 		print("received message from watch: \(message)")
 		
 		// ignore the message if we're already talking to the server
-		guard communicator == nil else {
-			print("ignoring message because we're already talking to the server")
-			return
-		}
+//		guard communicator == nil else {
+//			print("ignoring message because we're already talking to the server")
+//			return
+//		}
 		
 		// add location info
 		guard let loc = locManager.location else {
@@ -83,7 +83,9 @@ extension AppDelegate: WCSessionDelegate {
 		]
 		
 		// send to server
-		communicator = Communicator()
+		if communicator == nil {
+			communicator = Communicator()
+		}
 		let com = communicator!
 		com.delegate = self
 		com.sendDict(msgDict)
@@ -102,16 +104,33 @@ extension AppDelegate: CommunicatorDelegate {
 	func communicatorGetDataForSharing(_: Communicator) -> (type: String, data: AnyObject) {
 		// TODO: put this on another thread
 		let store = CNContactStore()
-		let predicate = CNContact.predicateForContactsMatchingName("Justin Loew")
-		if let contactOpt = try? store.unifiedContactsMatchingPredicate(predicate, keysToFetch: [CNContactEmailAddressesKey, CNContactFamilyNameKey, CNContactGivenNameKey, CNContactImageDataAvailableKey, CNContactImageDataKey, CNContactJobTitleKey, CNContactMiddleNameKey, CNContactNamePrefixKey, CNContactNameSuffixKey, CNContactNicknameKey, CNContactOrganizationNameKey, CNContactPhoneNumbersKey, CNContactPostalAddressesKey, CNContactSocialProfilesKey, CNContactThumbnailImageDataKey, CNContactTypeKey, CNContactUrlAddressesKey]).first,
-			contact = contactOpt,
-			vcardData = try? CNContactVCardSerialization.dataWithContacts([contact])
-		{
-			return ("vcf", vcardData)
-		} else {
-			print("Error getting contact card for user")
-			return ("vcf", NSData())
+		let predicate = CNContact.predicateForContactsMatchingName("Richard Stallman")
+		let mostKeys = [CNContactBirthdayKey, CNContactDatesKey, CNContactDepartmentNameKey, CNContactEmailAddressesKey, CNContactFamilyNameKey, CNContactGivenNameKey, CNContactIdentifierKey, CNContactImageDataAvailableKey, CNContactImageDataKey, CNContactInstantMessageAddressesKey, CNContactJobTitleKey, CNContactMiddleNameKey, CNContactNamePrefixKey, CNContactNameSuffixKey, CNContactNicknameKey, CNContactNonGregorianBirthdayKey, CNContactNoteKey, CNContactOrganizationNameKey, CNContactPhoneNumbersKey, CNContactPhoneticFamilyNameKey, CNContactPhoneticGivenNameKey, CNContactPhoneticMiddleNameKey, CNContactPostalAddressesKey, CNContactPreviousFamilyNameKey, CNContactRelationsKey, CNContactSocialProfilesKey, CNContactThumbnailImageDataKey, CNContactTypeKey, CNContactUrlAddressesKey]
+		do {
+			let contacts = try store.unifiedContactsMatchingPredicate(predicate, keysToFetch: mostKeys)
+			if let contact = contacts.first {
+				let vcardData = try CNContactVCardSerialization.dataWithContacts([contact])
+				return ("vcf", vcardData)
+			}
+			
+//			if contacts.count > 0 {
+//				let fetchRequest = CNContactFetchRequest(keysToFetch: mostKeys)
+//				var vcardData = NSData()
+//				
+//				try store.enumerateContactsWithFetchRequest(fetchRequest, usingBlock: { (contact, _) -> Void in
+//					do {
+//						vcardData = try CNContactVCardSerialization.dataWithContacts([contact])
+//					} catch {
+//						print("haha...I'm right \(error)")
+//					}
+//				})
+//				return ("vcf", vcardData)
+//			}
+		} catch {
+			print(error)
 		}
+		print("Error getting contact card for user")
+		return ("vcf", NSData())
 	}
 	
 	func communicator(comm: Communicator, didReceiveSharedData data: AnyObject, ofType type: String) {

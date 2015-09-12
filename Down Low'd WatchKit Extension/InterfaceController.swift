@@ -18,7 +18,7 @@ class InterfaceController: WKInterfaceController {
 			accelCountLabel?.setText("\(accelCount)")
 		}
 	}
-	var accelDataListener = AccelDataListener()
+	let accelDataListener = AccelDataListener()
 	private var wcsess: WCSession!
 	
 	override func willActivate() {
@@ -47,9 +47,9 @@ class InterfaceController: WKInterfaceController {
 			return
 		}
 		
-		let message = [
+		let message: [String : AnyObject] = [
 			"magnitude": mag,
-			"timestamp": NSDate()
+			"timestamp": Int(NSDate.timeIntervalSinceReferenceDate())
 			// the iOS app will add the location info
 		]
 		wcsess.sendMessage(message, replyHandler: nil) { (error) -> Void in
