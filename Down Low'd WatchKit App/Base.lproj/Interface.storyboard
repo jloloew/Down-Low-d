@@ -10,7 +10,9 @@
             <objects>
                 <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Down_Low_d_WatchKit_Extension">
                     <items>
-                        <label alignment="left" text="0" id="iHl-cF-vKk"/>
+                        <label alignment="left" text="0" id="iHl-cF-vKk">
+                            <color key="textColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                        </label>
                     </items>
                     <connections>
                         <outlet property="accelCountLabel" destination="iHl-cF-vKk" id="h3e-j8-U4P"/>

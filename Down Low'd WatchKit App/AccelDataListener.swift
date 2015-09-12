@@ -16,7 +16,7 @@ class AccelDataListener: NSObject {
 	let manager = CMMotionManager()
 	private var handler: CMAccelerometerHandler!
 	
-	init(spikeDetectedHandler: () -> Void) {
+	init(spikeDetectedHandler: (magnitude: Double) -> Void) {
 		super.init()
 		manager.accelerometerUpdateInterval = 0.01
 		handler = { (data, error) -> Void in
@@ -30,7 +30,7 @@ class AccelDataListener: NSObject {
 			// filter magnitude
 			if userAccel >= self.threshold {
 				print("Spike detected (\(userAccel)g)")
-				spikeDetectedHandler()
+				spikeDetectedHandler(magnitude: userAccel)
 				// pause callbacks
 				print("pausing accel triggers for \(self.callbackPauseTime) seconds")
 				self.manager.stopAccelerometerUpdates()
@@ -47,5 +47,13 @@ class AccelDataListener: NSObject {
 	deinit {
 		manager.stopAccelerometerUpdates()
 	}
+	
+//	func start() {
+//		manager.startAccelerometerUpdates()
+//	}
+//	
+//	func stop() {
+//		manager.stopAccelerometerUpdates()
+//	}
 	
 }
