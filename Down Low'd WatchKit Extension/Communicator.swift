@@ -13,7 +13,8 @@ private let _port = 8888
 
 protocol CommunicatorDelegate: AnyObject {
 	func communicatorGetDataForSharing(comm: Communicator) -> (type: String, data: AnyObject)
-	func communicator(comm: Communicator, didReceiveSharedData data: NSData)
+	// data is either String or NSData
+	func communicator(comm: Communicator, didReceiveSharedData data: AnyObject, ofType type: String)
 }
 
 class Communicator: NSObject {
@@ -23,6 +24,8 @@ class Communicator: NSObject {
 	var host: String { return "\(server):\(port)" }
 	let socket = SocketIOClient(socketURL: "\(_server):\(_port)")
 	weak var delegate: CommunicatorDelegate!
+	private var didSendData = false
+	private var didReceiveData = false
 	
 	override init() {
 		super.init()
@@ -43,8 +46,32 @@ class Communicator: NSObject {
 				"type": type,
 				"data": data
 			]])
+			// close socket if necessary
+			self.didSendData = true
+			self.waitAndCloseSocket()
 		}
 		
+		socket.on("sharedData") { (data, _) -> Void in
+			// close socket if necessary
+			self.didReceiveData = true
+			self.waitAndCloseSocket()
+			
+			if let dict = data?[0] as? [String : AnyObject],
+				data = dict["data"],
+				type = dict["type"] as? String
+			{
+				self.delegate.communicator(self, didReceiveSharedData: data, ofType: type)
+			} else {
+				print("Unable to read sharedData")
+			}
+		}
+	}
+	
+	func waitAndCloseSocket() {
+		// only close if we're done trading info or we haven't started yet
+		if didSendData != didReceiveData {
+			socket.close(fast: false)
+		}
 	}
 	
 	func sendDict(dict: [String : AnyObject]) {

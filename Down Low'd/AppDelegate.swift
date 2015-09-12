@@ -102,7 +102,23 @@ extension AppDelegate: CommunicatorDelegate {
 		
 	}
 	
-	func communicator(comm: Communicator, didReceiveSharedData data: NSData) {
-		
+	func communicator(comm: Communicator, didReceiveSharedData data: AnyObject, ofType type: String) {
+		if type == "vcf" {
+			guard let data = data as? NSData else {
+				print("Unable to read VCF data")
+				return
+			}
+			
+			// process VCF data
+			
+		} else if type == "LinkedIn" {
+			guard let username = data as? String else {
+				print("Unable to read username")
+				return
+			}
+			
+			// friend him on LinkedIn
+			
+		}
 	}
 }
