@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B86393381BA3EF5400FB3F3F /* AccelDataListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B877B87C1BA3E1C5008981BF /* AccelDataListener.swift */; };
 		B877B83F1BA3E058008981BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B877B83E1BA3E058008981BF /* AppDelegate.swift */; };
 		B877B8411BA3E058008981BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B877B8401BA3E058008981BF /* ViewController.swift */; };
 		B877B8441BA3E058008981BF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B877B8421BA3E058008981BF /* Main.storyboard */; };
@@ -66,6 +67,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B86392EC1BA3E95100FB3F3F /* JALMainInterfaceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JALMainInterfaceController.h; sourceTree = "<group>"; };
+		B86392ED1BA3E95100FB3F3F /* JALMainInterfaceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JALMainInterfaceController.m; sourceTree = "<group>"; };
 		B877B83B1BA3E058008981BF /* Down Low'd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Down Low'd.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B877B83E1BA3E058008981BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B877B8401BA3E058008981BF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +88,8 @@
 		B877B8691BA3E058008981BF /* GlanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlanceController.swift; sourceTree = "<group>"; };
 		B877B86B1BA3E058008981BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B877B86D1BA3E058008981BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B877B87B1BA3E1C4008981BF /* Down Low'd WatchKit App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Down Low'd WatchKit App-Bridging-Header.h"; sourceTree = "<group>"; };
+		B877B87C1BA3E1C5008981BF /* AccelDataListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelDataListener.swift; path = "../Down Low'd WatchKit App/AccelDataListener.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +149,9 @@
 				B877B8521BA3E058008981BF /* Interface.storyboard */,
 				B877B8551BA3E058008981BF /* Assets.xcassets */,
 				B877B8571BA3E058008981BF /* Info.plist */,
+				B86392EC1BA3E95100FB3F3F /* JALMainInterfaceController.h */,
+				B86392ED1BA3E95100FB3F3F /* JALMainInterfaceController.m */,
+				B877B87B1BA3E1C4008981BF /* Down Low'd WatchKit App-Bridging-Header.h */,
 			);
 			path = "Down Low'd WatchKit App";
 			sourceTree = "<group>";
@@ -151,6 +159,7 @@
 		B877B8601BA3E058008981BF /* Down Low'd WatchKit Extension */ = {
 			isa = PBXGroup;
 			children = (
+				B877B87C1BA3E1C5008981BF /* AccelDataListener.swift */,
 				B877B8631BA3E058008981BF /* InterfaceController.swift */,
 				B877B8651BA3E058008981BF /* ExtensionDelegate.swift */,
 				B877B8671BA3E058008981BF /* NotificationController.swift */,
@@ -232,6 +241,8 @@
 		B877B8331BA3E058008981BF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0710;
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Justin Loew";
 				TargetAttributes = {
@@ -310,6 +321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B86393381BA3EF5400FB3F3F /* AccelDataListener.swift in Sources */,
 				B877B8681BA3E058008981BF /* NotificationController.swift in Sources */,
 				B877B8661BA3E058008981BF /* ExtensionDelegate.swift in Sources */,
 				B877B8641BA3E058008981BF /* InterfaceController.swift in Sources */,
@@ -473,13 +485,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = Down_Low_d_WatchKit_Extension;
 				INFOPLIST_FILE = "Down Low'd WatchKit App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.justinloew.Down-Low-d.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Down Low'd WatchKit App/Down Low'd WatchKit App-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -489,13 +505,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = Down_Low_d_WatchKit_Extension;
 				INFOPLIST_FILE = "Down Low'd WatchKit App/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.justinloew.Down-Low-d.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Down Low'd WatchKit App/Down Low'd WatchKit App-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -542,6 +561,7 @@
 				B877B8721BA3E058008981BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B877B8741BA3E058008981BF /* Build configuration list for PBXNativeTarget "Down Low'd WatchKit App" */ = {
 			isa = XCConfigurationList;
@@ -550,6 +570,7 @@
 				B877B8761BA3E058008981BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B877B8781BA3E058008981BF /* Build configuration list for PBXNativeTarget "Down Low'd" */ = {
 			isa = XCConfigurationList;
@@ -558,6 +579,7 @@
 				B877B87A1BA3E058008981BF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

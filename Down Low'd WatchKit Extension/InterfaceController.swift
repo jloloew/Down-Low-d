@@ -11,6 +11,14 @@ import Foundation
 
 
 class InterfaceController: WKInterfaceController {
+	
+	@IBOutlet weak var accelCountLabel: WKInterfaceLabel!
+	var accelCount = 0 {
+		didSet {
+			accelCountLabel?.setText("\(accelCount)")
+		}
+	}
+	var accelDataListener: AccelDataListener!
 
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
@@ -21,10 +29,15 @@ class InterfaceController: WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+		
+		accelDataListener = AccelDataListener(spikeDetectedHandler: { () -> Void in
+			self.accelCount++
+		})
     }
 
     override func didDeactivate() {
         // This method is called when watch view controller is no longer visible
+		accelDataListener = nil
         super.didDeactivate()
     }
 
