@@ -106,10 +106,10 @@ extension AppDelegate: CommunicatorDelegate {
 			"type": "contact",
 			"given name": "Richard",
 			"family name": "Stallman",
-			"phone": 8675309,
-			"phonetype": "mobile",
-			"email": "hoholover@aol.com",
-			"emailtype": "home"
+			"phone": "867-5309",
+			"phonetype": CNLabelPhoneNumberMobile,
+			"email": "Ho-Ho_lover@aol.com",
+			"emailtype": CNLabelHome
 		]
 	}
 		/*
@@ -151,8 +151,8 @@ extension AppDelegate: CommunicatorDelegate {
 			let contact = CNMutableContact()
 			contact.givenName = data["given name"] as! String
 			contact.familyName = data["family name"] as! String
-			contact.phoneNumbers = [CNLabeledValue(label: (data["phonetype"] as! String), value: data["phone"] as! Int)]
-			contact.emailAddresses = [CNLabeledValue(label: (data["emailtype"] as! String), value: data["email"] as! Int)]
+			contact.phoneNumbers = [CNLabeledValue(label: (data["phonetype"] as! String), value: CNPhoneNumber(stringValue: data["phone"] as! String))]
+			contact.emailAddresses = [CNLabeledValue(label: (data["emailtype"] as! String), value: data["email"] as! String)]
 			// save the new contact
 			let store = CNContactStore()
 			let saveRequest = CNSaveRequest()
