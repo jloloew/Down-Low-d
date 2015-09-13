@@ -167,6 +167,7 @@ extension AppDelegate: CommunicatorDelegate {
 			saveRequest.addContact(contact, toContainerWithIdentifier: nil)
 			do {
 				try store.executeSaveRequest(saveRequest)
+				(window!.rootViewController as! ViewController).didSaveContact()
 				print("Saved contact")
 			} catch {
 				print("Unable to save contact: \(error)")
