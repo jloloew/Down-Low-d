@@ -15,6 +15,7 @@ protocol CommunicatorDelegate: AnyObject {
 	func communicatorGetDataForSharing(comm: Communicator) -> [String : AnyObject]
 	// data is either String or NSData
 	func communicator(comm: Communicator, didReceiveSharedData data: [String : AnyObject])
+	func communicatorDidFinishTransmittingData(comm: Communicator)
 }
 
 class Communicator: NSObject {
@@ -74,6 +75,12 @@ class Communicator: NSObject {
 		// only close if we're done trading info or we haven't started yet
 		if didSendData != didReceiveData {
 //			socket.close(fast: false)
+		}
+		// call out to delegate
+		if didSendData && didReceiveData {
+			delegate.communicatorDidFinishTransmittingData(self)
+			didSendData = false
+			didReceiveData = false
 		}
 	}
 	

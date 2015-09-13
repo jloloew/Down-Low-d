@@ -177,4 +177,8 @@ extension AppDelegate: CommunicatorDelegate {
 			print("Unknown type")
 		}
 	}
+	
+	func communicatorDidFinishTransmittingData(_: Communicator) {
+		wcsess.sendMessage(["doneTransmittingData": true], replyHandler: nil, errorHandler: nil)
+	}
 }

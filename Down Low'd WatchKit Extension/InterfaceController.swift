@@ -12,6 +12,10 @@ import WatchConnectivity
 
 class InterfaceController: WKInterfaceController {
 	
+	enum LabelState {
+		case Contact, LinkedIN
+	}
+	
 	private let numCoinImages = 57
 	
 	@IBOutlet weak var downlowdLogo: WKInterfaceImage!
@@ -20,6 +24,16 @@ class InterfaceController: WKInterfaceController {
 	@IBOutlet weak var contactLabel: WKInterfaceLabel!
 	let accelDataListener = AccelDataListener()
 	private var wcsess: WCSession!
+	private var labelState = LabelState.Contact {
+		didSet {
+			switch labelState {
+			case .Contact:
+				contactLabel.setText("Contact")
+			case .LinkedIN:
+				contactLabel.setText("LinkedIN")
+			}
+		}
+	}
 	
 	override func willActivate() {
 		// This method is called when watch view controller is about to be visible to user
@@ -68,6 +82,14 @@ class InterfaceController: WKInterfaceController {
 	private var coinPickerAnimationDuration: NSTimeInterval = 1.0
 	@IBAction func coinPickerTapped() {
 		coinImage.startAnimatingWithImagesInRange(NSRange(0...numCoinImages/2), duration: coinPickerAnimationDuration, repeatCount: 1)
+		// wait for half the animation before we change our state
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC) * (coinPickerAnimationDuration/2))), dispatch_get_main_queue()) { () -> Void in
+			if self.labelState == .Contact {
+				self.labelState = .LinkedIN
+			} else if self.labelState == .LinkedIN {
+				self.labelState = .Contact
+			}
+		}
 		coinPickerAnimationDuration = -coinPickerAnimationDuration
 	}
 	
@@ -92,6 +114,16 @@ class InterfaceController: WKInterfaceController {
 extension InterfaceController: WCSessionDelegate {
 	func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
 		print("Received message from phone: \(message)")
+		if let temp = message["doneTransmittingData"] as? Bool where temp {
+			// animate checkmark
+			coinImage.setImageNamed("sucessText")
+			let numCheckImages = 73
+			let duration = 2.0
+			coinImage.startAnimatingWithImagesInRange(NSRange(1...numCheckImages), duration: duration, repeatCount: 1)
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(duration * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+				self.coinImage.setImageNamed("Bubble")
+			}
+		}
 	}
 }
 
