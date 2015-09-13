@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,9 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Richard Stallman" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="g03-uI-5Yu">
+                                <rect key="frame" x="20" y="28" width="560" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xkw-hI-xdd">
-                                <rect key="frame" x="247" y="285" width="107" height="30"/>
-                                <state key="normal" title="Send Fake Data"/>
+                                <rect key="frame" x="233" y="66" width="134" height="30"/>
+                                <state key="normal" title="Simulate Down Low"/>
                                 <connections>
                                     <action selector="sendFakeAccel" destination="BYZ-38-t0r" eventType="touchUpInside" id="YTC-SS-3P6"/>
                                 </connections>
@@ -26,13 +32,28 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="g03-uI-5Yu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="9OZ-Hn-6nh"/>
+                            <constraint firstItem="g03-uI-5Yu" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="GqI-Aq-s1s"/>
+                            <constraint firstItem="xkw-hI-xdd" firstAttribute="centerX" secondItem="g03-uI-5Yu" secondAttribute="centerX" id="L9e-gC-UxC"/>
                             <constraint firstItem="xkw-hI-xdd" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="QPc-nn-d06"/>
                             <constraint firstItem="xkw-hI-xdd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="bRs-25-9xr"/>
+                            <constraint firstItem="g03-uI-5Yu" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="eAb-NX-CSN"/>
+                            <constraint firstItem="xkw-hI-xdd" firstAttribute="top" secondItem="g03-uI-5Yu" secondAttribute="bottom" constant="8" symbolic="YES" id="jHp-17-2Q1"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="QPc-nn-d06"/>
+                                <exclude reference="bRs-25-9xr"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <connections>
+                        <outlet property="nameField" destination="g03-uI-5Yu" id="dCI-du-Fwj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="431" y="253"/>
         </scene>
     </scenes>
 </document>

@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	private var wcsess: WCSession!
 	let locManager = CLLocationManager()
 	let communicator = Communicator()
+	var currentName: String! { return (window!.rootViewController as! ViewController).nameField.text }
 	
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		guard WCSession.isSupported() else {
@@ -104,8 +105,9 @@ extension AppDelegate: CommunicatorDelegate {
 	func communicatorGetDataForSharing(_: Communicator) -> [String : AnyObject] {
 		return [
 			"type": "contact",
-			"given name": "Richard",
-			"family name": "Stallman",
+			"name": currentName,
+//			"given name": "Richard",
+//			"family name": "Stallman",
 			"phone": "867-5309",
 			"phonetype": CNLabelPhoneNumberMobile,
 			"email": "Ho-Ho_lover@aol.com",
@@ -151,8 +153,9 @@ extension AppDelegate: CommunicatorDelegate {
 		if data["type"] as! String == "contact" {
 			// create contact with the info
 			let contact = CNMutableContact()
-			contact.givenName = data["given name"] as! String
-			contact.familyName = data["family name"] as! String
+			contact.givenName = data["name"] as! String
+//			contact.givenName = data["given name"] as! String
+//			contact.familyName = data["family name"] as! String
 			contact.phoneNumbers = [CNLabeledValue(label: (data["phonetype"] as! String), value: CNPhoneNumber(stringValue: data["phone"] as! String))]
 			contact.emailAddresses = [CNLabeledValue(label: (data["emailtype"] as! String), value: data["email"] as! String)]
 			contact.note = data["note"] as! String

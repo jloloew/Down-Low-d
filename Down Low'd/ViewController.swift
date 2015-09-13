@@ -11,9 +11,12 @@ import WatchConnectivity
 
 class ViewController: UIViewController {
 	
+	@IBOutlet weak var nameField: UITextField!
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
+		nameField.becomeFirstResponder()
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -36,4 +39,3 @@ class ViewController: UIViewController {
 		ad.session(WCSession.defaultSession(), didReceiveMessage: message)
 	}
 }
-
