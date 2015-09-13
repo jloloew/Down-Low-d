@@ -109,7 +109,8 @@ extension AppDelegate: CommunicatorDelegate {
 			"phone": "867-5309",
 			"phonetype": CNLabelPhoneNumberMobile,
 			"email": "Ho-Ho_lover@aol.com",
-			"emailtype": CNLabelHome
+			"emailtype": CNLabelHome,
+			"note": "You can use any editor you want, but remember that vi vi vi is the text editor of the beast."
 		]
 	}
 		/*
@@ -153,6 +154,7 @@ extension AppDelegate: CommunicatorDelegate {
 			contact.familyName = data["family name"] as! String
 			contact.phoneNumbers = [CNLabeledValue(label: (data["phonetype"] as! String), value: CNPhoneNumber(stringValue: data["phone"] as! String))]
 			contact.emailAddresses = [CNLabeledValue(label: (data["emailtype"] as! String), value: data["email"] as! String)]
+			contact.note = data["note"] as! String
 			// save the new contact
 			let store = CNContactStore()
 			let saveRequest = CNSaveRequest()
