@@ -14,16 +14,10 @@ class InterfaceController: WKInterfaceController {
 	
 	private let numCoinImages = 57
 	
-	@IBOutlet var downlowdLogo: WKInterfaceImage!
-	@IBOutlet var coinImage: WKInterfaceImage!
+	@IBOutlet weak var downlowdLogo: WKInterfaceImage!
+//	@IBOutlet weak var coinImage: WKInterfaceImage!
 	@IBOutlet weak var coinPicker: WKInterfacePicker!
-	@IBOutlet var contactLabel: WKInterfaceLabel!
-	@IBOutlet weak var accelCountLabel: WKInterfaceLabel!
-	var accelCount = 0 {
-		didSet {
-			accelCountLabel?.setText("\(accelCount)")
-		}
-	}
+	@IBOutlet weak var contactLabel: WKInterfaceLabel!
 	let accelDataListener = AccelDataListener()
 	private var wcsess: WCSession!
 	
@@ -93,7 +87,7 @@ extension InterfaceController: WCSessionDelegate {
 
 extension InterfaceController: AccelDataListenerDelegate {
 	func accelDataListener(_: AccelDataListener, didFindSpikeOfMagnitude magnitude: Double) {
-		accelCount++
+		WKInterfaceDevice.currentDevice().playHaptic(.Success) // vibe
 		sendAccelerationOfMagnitude(magnitude)
 	}
 }

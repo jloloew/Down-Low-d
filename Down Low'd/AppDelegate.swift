@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 	private var wcsess: WCSession!
 	let locManager = CLLocationManager()
-	var communicator: Communicator?
+	let communicator = Communicator()
 	
 	func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 		guard WCSession.isSupported() else {
@@ -77,18 +77,18 @@ extension AppDelegate: WCSessionDelegate {
 			return
 		}
 		var msgDict = message
+//		msgDict["location"] = [
+//			"lat": loc.coordinate.latitude,
+//			"lon": loc.coordinate.longitude
+//		]
 		msgDict["location"] = [
-			"lat": loc.coordinate.latitude,
-			"lon": loc.coordinate.longitude
+			"lat": 42.275555556,
+			"lon": -83.731388889
 		]
 		
 		// send to server
-		if communicator == nil {
-			communicator = Communicator()
-		}
-		let com = communicator!
-		com.delegate = self
-		com.sendDict(msgDict)
+		communicator.delegate = self
+		communicator.sendDict(msgDict)
 	}
 }
 
@@ -101,7 +101,18 @@ extension AppDelegate: CLLocationManagerDelegate {
 }
 
 extension AppDelegate: CommunicatorDelegate {
-	func communicatorGetDataForSharing(_: Communicator) -> (type: String, data: AnyObject) {
+	func communicatorGetDataForSharing(_: Communicator) -> [String : AnyObject] {
+		return [
+			"type": "contact",
+			"given name": "Richard",
+			"family name": "Stallman",
+			"phone": 8675309,
+			"phonetype": "mobile",
+			"email": "hoholover@aol.com",
+			"emailtype": "home"
+		]
+	}
+		/*
 		// TODO: put this on another thread
 		let store = CNContactStore()
 		let predicate = CNContact.predicateForContactsMatchingName("Richard Stallman")
@@ -132,30 +143,28 @@ extension AppDelegate: CommunicatorDelegate {
 		print("Error getting contact card for user")
 		return ("vcf", NSData())
 	}
+	*/
 	
-	func communicator(comm: Communicator, didReceiveSharedData data: AnyObject, ofType type: String) {
-		if type == "vcf" {
-			guard let data = data as? NSData,
-				_contacts = try? CNContactVCardSerialization.contactsWithData(data) as? [CNContact],
-				contacts = _contacts
-			else {
-				print("Unable to read VCF data")
-				return
-			}
-			
-			// save VCF data
+	func communicator(comm: Communicator, didReceiveSharedData data: [String : AnyObject]) {
+		if data["type"] as! String == "contact" {
+			// create contact with the info
+			let contact = CNMutableContact()
+			contact.givenName = data["given name"] as! String
+			contact.familyName = data["family name"] as! String
+			contact.phoneNumbers = [CNLabeledValue(label: (data["phonetype"] as! String), value: data["phone"] as! Int)]
+			contact.emailAddresses = [CNLabeledValue(label: (data["emailtype"] as! String), value: data["email"] as! Int)]
+			// save the new contact
 			let store = CNContactStore()
 			let saveRequest = CNSaveRequest()
-			contacts.forEach { (contact) -> () in
-				saveRequest.addContact(contact.mutableCopy() as! CNMutableContact, toContainerWithIdentifier: nil)
+			saveRequest.addContact(contact, toContainerWithIdentifier: nil)
+			do {
+				try store.executeSaveRequest(saveRequest)
+				print("Saved contact")
+			} catch {
+				print("Unable to save contact: \(error)")
 			}
-			_ = try? store.executeSaveRequest(saveRequest)
-		} else if type == "LinkedIn" {
-			guard let username = data as? String else {
-				print("Unable to read username")
-				return
-			}
-			
+		} else if data["type"] as! String == "LinkedIn" {
+			let username = data["usernqme"] as! String
 			// friend him on LinkedIn
 			let profileURL = NSURL(string: "https://linkedin.com/in/" + username)!
 			UIApplication.sharedApplication().openURL(profileURL)

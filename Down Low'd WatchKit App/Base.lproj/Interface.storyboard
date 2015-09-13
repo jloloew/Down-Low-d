@@ -6,23 +6,6 @@
     </dependencies>
     <scenes>
         <!--Interface Controller-->
-        <scene sceneID="aou-V4-d1y">
-            <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Down_Low_d_WatchKit_Extension">
-                    <items>
-                        <label alignment="left" text="0" id="iHl-cF-vKk">
-                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </label>
-                    </items>
-                    <connections>
-                        <outlet property="accelCountLabel" destination="iHl-cF-vKk" id="h3e-j8-U4P"/>
-                        <outlet property="coinPicker" destination="bA0-U1-AMm" id="j7K-b5-Uke"/>
-                    </connections>
-                </controller>
-            </objects>
-            <point key="canvasLocation" x="235" y="347"/>
-        </scene>
-        <!--Interface Controller-->
         <scene sceneID="fDJ-5o-R9E">
             <objects>
                 <controller hidesWhenLoading="NO" id="9yS-33-P5v" customClass="InterfaceController" customModule="Down_Low_d_WatchKit_Extension">
@@ -47,12 +30,13 @@
                     </variation>
                     <connections>
                         <outlet property="coinImage" destination="qpy-wJ-Cvc" id="ni0-DL-50T"/>
+                        <outlet property="coinPicker" destination="bA0-U1-AMm" id="LgJ-zl-cVA"/>
                         <outlet property="contactLabel" destination="SDt-sQ-NjS" id="r8A-c1-KIt"/>
                         <outlet property="downlowdLogo" destination="3i9-oc-6S6" id="F5Z-Ph-KnX"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="472" y="347"/>
+            <point key="canvasLocation" x="235" y="348"/>
         </scene>
         <!--Glance Interface Controller-->
         <scene sceneID="BOz-TT-tkC">

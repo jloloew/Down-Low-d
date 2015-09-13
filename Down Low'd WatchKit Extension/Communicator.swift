@@ -9,12 +9,12 @@
 import WatchKit
 
 private let _server = "104.236.59.44"
-private let _port = 8080
+private let _port = 4000
 
 protocol CommunicatorDelegate: AnyObject {
-	func communicatorGetDataForSharing(comm: Communicator) -> (type: String, data: AnyObject)
+	func communicatorGetDataForSharing(comm: Communicator) -> [String : AnyObject]
 	// data is either String or NSData
-	func communicator(comm: Communicator, didReceiveSharedData data: AnyObject, ofType type: String)
+	func communicator(comm: Communicator, didReceiveSharedData data: [String : AnyObject])
 }
 
 class Communicator: NSObject {
@@ -41,11 +41,8 @@ class Communicator: NSObject {
 		
 		socket.on("matchFoundShouldUploadData") { (_, _) -> Void in
 			print("matchFoundShouldUploadData")
-			let (type, data) = self.delegate.communicatorGetDataForSharing(self)
-			self.socket.emit("shareData", withItems: [[
-				"type": type,
-				"data": data
-			]])
+			let data = self.delegate.communicatorGetDataForSharing(self)
+			self.socket.emit("shareData", withItems: [data])
 			// close socket if necessary
 			self.didSendData = true
 			self.waitAndCloseSocket()
@@ -57,11 +54,8 @@ class Communicator: NSObject {
 			self.didReceiveData = true
 			self.waitAndCloseSocket()
 			
-			if let dict = data?[0] as? [String : AnyObject],
-				data = dict["data"],
-				type = dict["type"] as? String
-			{
-				self.delegate.communicator(self, didReceiveSharedData: data, ofType: type)
+			if let dict = data?[0] as? [String : AnyObject] {
+				self.delegate.communicator(self, didReceiveSharedData: dict)
 			} else {
 				print("Unable to read sharedData")
 			}
@@ -79,7 +73,7 @@ class Communicator: NSObject {
 	func waitAndCloseSocket() {
 		// only close if we're done trading info or we haven't started yet
 		if didSendData != didReceiveData {
-			socket.close(fast: false)
+//			socket.close(fast: false)
 		}
 	}
 	
