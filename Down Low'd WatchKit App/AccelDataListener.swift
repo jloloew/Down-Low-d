@@ -16,7 +16,7 @@ protocol AccelDataListenerDelegate: AnyObject {
 class AccelDataListener: AnyObject {
 	
 	let accelReadDelay: NSTimeInterval = 0.05 // amount of time to wait between each read from accel data
-	let threshold = 0.3
+	let threshold = 2.0
 	let manager = CMMotionManager()
 	weak var delegate: AccelDataListenerDelegate!
 	private var paused = true

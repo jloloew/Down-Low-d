@@ -72,7 +72,7 @@ extension AppDelegate: WCSessionDelegate {
 //		}
 		
 		// add location info
-		guard let loc = locManager.location else {
+		guard let _ = locManager.location else {
 			print("Can't get location")
 			return
 		}

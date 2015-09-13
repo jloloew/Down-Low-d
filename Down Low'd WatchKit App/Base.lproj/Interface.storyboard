@@ -15,21 +15,25 @@
                                 <imageView width="128" alignment="center" image="Logo" id="3i9-oc-6S6"/>
                             </items>
                         </group>
-                        <imageView width="83" height="83" alignment="center" verticalAlignment="center" image="Bubble" animationDuration="2" id="qpy-wJ-Cvc"/>
-                        <picker width="83" height="83" alignment="center" verticalAlignment="center" style="sequence" id="bA0-U1-AMm">
+                        <button alignment="center" verticalAlignment="center" id="uxS-lA-Xb6">
+                            <group key="contentGroup" alignment="left" id="elg-rR-mDe">
+                                <items>
+                                    <imageView width="83" height="83" alignment="center" verticalAlignment="center" image="Bubble" initiallyAnimated="NO" animationDuration="2" id="qpy-wJ-Cvc"/>
+                                </items>
+                            </group>
+                            <connections>
+                                <action selector="coinPickerTapped" destination="9yS-33-P5v" id="bcf-lA-DI4"/>
+                            </connections>
+                        </button>
+                        <picker width="2" height="2" alignment="left" verticalAlignment="bottom" alpha="0.0" style="sequence" id="bA0-U1-AMm">
                             <connections>
                                 <action selector="coinPickerChanged:" destination="9yS-33-P5v" id="Rt3-PQ-nsR"/>
                             </connections>
                         </picker>
                         <label height="24" alignment="center" verticalAlignment="bottom" text="Contact" textAlignment="center" id="SDt-sQ-NjS"/>
                     </items>
-                    <variation key="default">
-                        <mask key="items">
-                            <exclude reference="qpy-wJ-Cvc"/>
-                        </mask>
-                    </variation>
                     <connections>
-                        <outlet property="coinImage" destination="qpy-wJ-Cvc" id="ni0-DL-50T"/>
+                        <outlet property="coinImage" destination="qpy-wJ-Cvc" id="Ig5-Pm-iUZ"/>
                         <outlet property="coinPicker" destination="bA0-U1-AMm" id="LgJ-zl-cVA"/>
                         <outlet property="contactLabel" destination="SDt-sQ-NjS" id="r8A-c1-KIt"/>
                         <outlet property="downlowdLogo" destination="3i9-oc-6S6" id="F5Z-Ph-KnX"/>

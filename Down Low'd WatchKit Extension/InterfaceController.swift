@@ -15,7 +15,7 @@ class InterfaceController: WKInterfaceController {
 	private let numCoinImages = 57
 	
 	@IBOutlet weak var downlowdLogo: WKInterfaceImage!
-//	@IBOutlet weak var coinImage: WKInterfaceImage!
+	@IBOutlet weak var coinImage: WKInterfaceImage!
 	@IBOutlet weak var coinPicker: WKInterfacePicker!
 	@IBOutlet weak var contactLabel: WKInterfaceLabel!
 	let accelDataListener = AccelDataListener()
@@ -37,14 +37,18 @@ class InterfaceController: WKInterfaceController {
 		
 		// set up picker
 		var pickerItems = [WKPickerItem]()
-		for i in 1...numCoinImages {
-			let pickerItem = WKPickerItem()
-			pickerItem.contentImage = WKImage(imageName: "Bubble\(i).png")
-			pickerItems.append(pickerItem)
+		for _ in 1...numCoinImages/2 {
+			pickerItems.append(WKPickerItem())
 		}
+//		for i in 1...numCoinImages/2 {
+//			let pickerItem = WKPickerItem()
+//			pickerItem.contentImage = WKImage(imageName: "Bubble\(i).png")
+//			pickerItems.append(pickerItem)
+//		}
 		coinPicker.setItems(pickerItems)
+//		coinPicker.setItems([WKPickerItem(), WKPickerItem()])
 //		coinPicker.setCoordinatedAnimations([coinImage])
-		coinPicker.focus()
+//		coinPicker.focus()
 	}
 	
 	override func didDeactivate() {
@@ -59,6 +63,12 @@ class InterfaceController: WKInterfaceController {
 		} else if value == numCoinImages - 1 {
 			coinPicker.setSelectedItemIndex(1)
 		}
+	}
+	
+	private var coinPickerAnimationDuration: NSTimeInterval = 1.0
+	@IBAction func coinPickerTapped() {
+		coinImage.startAnimatingWithImagesInRange(NSRange(0...numCoinImages/2), duration: coinPickerAnimationDuration, repeatCount: 1)
+		coinPickerAnimationDuration = -coinPickerAnimationDuration
 	}
 	
 	func sendAccelerationOfMagnitude(mag: Double) {
