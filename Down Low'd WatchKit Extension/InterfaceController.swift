@@ -12,6 +12,12 @@ import WatchConnectivity
 
 class InterfaceController: WKInterfaceController {
 	
+	private let numCoinImages = 57
+	
+	@IBOutlet var downlowdLogo: WKInterfaceImage!
+	@IBOutlet var coinImage: WKInterfaceImage!
+	@IBOutlet weak var coinPicker: WKInterfacePicker!
+	@IBOutlet var contactLabel: WKInterfaceLabel!
 	@IBOutlet weak var accelCountLabel: WKInterfaceLabel!
 	var accelCount = 0 {
 		didSet {
@@ -34,11 +40,31 @@ class InterfaceController: WKInterfaceController {
 		// start accelerometer data listener
 		accelDataListener.delegate = self
 		accelDataListener.start()
+		
+		// set up picker
+		var pickerItems = [WKPickerItem]()
+		for i in 1...numCoinImages {
+			let pickerItem = WKPickerItem()
+			pickerItem.contentImage = WKImage(imageName: "Bubble\(i).png")
+			pickerItems.append(pickerItem)
+		}
+		coinPicker.setItems(pickerItems)
+//		coinPicker.setCoordinatedAnimations([coinImage])
+		coinPicker.focus()
 	}
 	
 	override func didDeactivate() {
 		// This method is called when watch view controller is no longer visible
 		super.didDeactivate()
+	}
+	
+	@IBAction func coinPickerChanged(value: Int) {
+		// wrap around
+		if value == 0 {
+			coinPicker.setSelectedItemIndex(numCoinImages - 2)
+		} else if value == numCoinImages - 1 {
+			coinPicker.setSelectedItemIndex(1)
+		}
 	}
 	
 	func sendAccelerationOfMagnitude(mag: Double) {

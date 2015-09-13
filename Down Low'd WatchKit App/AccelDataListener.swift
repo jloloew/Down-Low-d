@@ -22,6 +22,10 @@ class AccelDataListener: AnyObject {
 	private var paused = true
 	private var isSpiking = false // whether the last reading was a spike
 	
+	init() {
+		manager.startAccelerometerUpdates()
+	}
+	
 	deinit {
 		manager.stopAccelerometerUpdates()
 	}
@@ -31,9 +35,8 @@ class AccelDataListener: AnyObject {
 			return
 		}
 		
-		manager.startAccelerometerUpdates()
+//		manager.startAccelerometerUpdates()
 		paused = false
-		usleep(100000)
 		print("Starting accel updates \(manager.accelerometerData)")
 		handleNewAccelData(manager.accelerometerData!)
 	}
