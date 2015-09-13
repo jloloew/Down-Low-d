@@ -8,8 +8,8 @@
 
 import WatchKit
 
-private let _server = "104.236.59.44"
-private let _port = 4000
+private let _server = "downlowd.azurewebsites.net"//"104.236.59.44"
+//private let _port = 4000
 
 protocol CommunicatorDelegate: AnyObject {
 	func communicatorGetDataForSharing(comm: Communicator) -> [String : AnyObject]
@@ -20,9 +20,9 @@ protocol CommunicatorDelegate: AnyObject {
 class Communicator: NSObject {
 	
 	var server: String { return _server }
-	var port: Int { return _port }
-	var host: String { return "\(server):\(port)" }
-	let socket = SocketIOClient(socketURL: "\(_server):\(_port)", opts: ["forceWebsockets": true])
+//	var port: Int { return _port }
+	var host: String { return "\(server)" } //:\(port)" }
+	let socket = SocketIOClient(socketURL: "\(_server)"/*:\(_port)"*/, opts: ["forcePolling": true])
 	weak var delegate: CommunicatorDelegate!
 	private var didSendData = false
 	private var didReceiveData = false

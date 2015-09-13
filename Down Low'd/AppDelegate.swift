@@ -111,6 +111,7 @@ extension AppDelegate: CommunicatorDelegate {
 			"email": "Ho-Ho_lover@aol.com",
 			"emailtype": CNLabelHome,
 			"note": "You can use any editor you want, but remember that vi vi vi is the text editor of the beast."
+//			,"image": UIImagePNGRepresentation(UIImage(named: "stallman")!)!
 		]
 	}
 		/*
@@ -155,6 +156,8 @@ extension AppDelegate: CommunicatorDelegate {
 			contact.phoneNumbers = [CNLabeledValue(label: (data["phonetype"] as! String), value: CNPhoneNumber(stringValue: data["phone"] as! String))]
 			contact.emailAddresses = [CNLabeledValue(label: (data["emailtype"] as! String), value: data["email"] as! String)]
 			contact.note = data["note"] as! String
+//			contact.imageData = data["image"] as? NSData
+			contact.imageData = UIImagePNGRepresentation(UIImage(named: "stallman")!)!
 			// save the new contact
 			let store = CNContactStore()
 			let saveRequest = CNSaveRequest()
